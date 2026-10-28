@@ -1,4 +1,4 @@
-LeadFlow – Meta Lead Ads + React Native PoC
+LeadStream – Meta Lead Ads + React Native PoC
 I built LeadFlow to test one simple idea: when someone submits a Meta lead form, their lead should show up in an already-open mobile app without anyone needing to refresh the screen.
 The project has a React Native app, a Node.js backend, and a MongoDB database. Socket.IO is used to push new leads to the phone as soon as the backend has saved them.
 What it does
