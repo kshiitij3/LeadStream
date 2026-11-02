@@ -7,6 +7,8 @@ export function verifyMetaWebhook(req, res) {
   const suppliedToken = String(req.query["hub.verify_token"] || "");
   const challenge = req.query["hub.challenge"];
   const expectedToken = process.env.META_VERIFY_TOKEN || "";
+
+ 
   if (!expectedToken) {
     console.error("[META WEBHOOK] META_VERIFY_TOKEN is not configured");
     return res.status(500).send("Webhook verification is not configured");
@@ -16,6 +18,9 @@ export function verifyMetaWebhook(req, res) {
   const tokenMatches =
     suppliedBuffer.length === expectedBuffer.length &&
     crypto.timingSafeEqual(suppliedBuffer, expectedBuffer);
+
+ 
+
   if (mode === "subscribe" && tokenMatches && challenge) {
     return res.status(200).type("text/plain").send(String(challenge));
   }
@@ -40,6 +45,8 @@ function isValidSignature(rawBody, signature, appSecret) {
 }
 
 export async function receiveMetaWebhook(req, res) {
+
+
   const appSecret = process.env.META_APP_SECRET;
 
   if (!appSecret) {
@@ -50,8 +57,11 @@ export async function receiveMetaWebhook(req, res) {
   const signature = req.get("x-hub-signature-256");
 
   if (!isValidSignature(req.body, signature, appSecret)) {
+    console.warn("[META WEBHOOK] Signature validation failed");
     return res.status(401).send("Invalid webhook signature");
   }
+
+  console.log("[META WEBHOOK] Signature validation succeeded");
 
   let payload;
 
